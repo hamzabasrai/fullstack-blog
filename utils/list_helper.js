@@ -33,4 +33,17 @@ const mostBlogs = (blogs) => {
   return { author, blogs: number };
 };
 
-module.exports = { totalLikes, favouriteBlog, mostBlogs };
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return {};
+  }
+
+  const dict = _.groupBy(blogs, 'author');
+  const likeMap = Object.keys(dict).map((author) => {
+    const blogList = dict[author];
+    return { author: author, likes: totalLikes(blogList) };
+  });
+  return _.maxBy(likeMap, 'likes');
+};
+
+module.exports = { totalLikes, favouriteBlog, mostBlogs, mostLikes };

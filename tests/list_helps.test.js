@@ -103,15 +103,38 @@ describe('mostBlogs', () => {
     const result = listHelper.mostBlogs(listWithOneBlog);
     expect(result).toEqual({
       author: 'Edsger W. Dijkstra',
-      blogs: 1
-    })
+      blogs: 1,
+    });
   });
 
   test('when list has multiple blogs', () => {
     const result = listHelper.mostBlogs(listWithMultipleBlogs);
     expect(result).toEqual({
       author: 'Edsger W. Dijkstra',
-      blogs: 2
-    })
+      blogs: 2,
+    });
+  });
+});
+
+describe('mostLikes', () => {
+  test('when list is empty', () => {
+    const result = listHelper.mostLikes([]);
+    expect(result).toEqual({});
+  });
+
+  test('when list has one blog', () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 5,
+    });
+  });
+
+  test('when list has multiple blogs', () => {
+    const result = listHelper.mostLikes(listWithMultipleBlogs);
+    expect(result).toEqual({
+      author: 'Alan Turing',
+      likes: 19,
+    });
   });
 });
