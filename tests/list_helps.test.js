@@ -25,7 +25,7 @@ const listWithMultipleBlogs = [
   {
     _id: '5a422aa71b54a676234d17f8',
     title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
+    author: 'Ada Lovelace',
     url:
       'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 8,
@@ -43,7 +43,7 @@ const listWithMultipleBlogs = [
   {
     _id: '5a422aa71b54a676234d17f8',
     title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
+    author: 'Alan Turing',
     url:
       'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 19,
@@ -69,6 +69,11 @@ describe('total likes', () => {
 });
 
 describe('favouriteBlog', () => {
+  test('when list is empty', () => {
+    const result = listHelper.favouriteBlog([]);
+    expect(result).toEqual({});
+  });
+
   test('when list has one blog', () => {
     const result = listHelper.favouriteBlog(listWithOneBlog);
     expect(result).toEqual({
@@ -82,15 +87,31 @@ describe('favouriteBlog', () => {
     const result = listHelper.favouriteBlog(listWithMultipleBlogs);
     expect(result).toEqual({
       title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
+      author: 'Alan Turing',
       likes: 19,
     });
   });
 });
 
-test('dummy returns one', () => {
-  const blogs = [];
+describe('mostBlogs', () => {
+  test('when list is empty', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual({});
+  });
 
-  const result = listHelper.dummy(blogs);
-  expect(result).toBe(1);
+  test('when list has one blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1
+    })
+  });
+
+  test('when list has multiple blogs', () => {
+    const result = listHelper.mostBlogs(listWithMultipleBlogs);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 2
+    })
+  });
 });
