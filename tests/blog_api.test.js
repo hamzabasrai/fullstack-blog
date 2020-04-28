@@ -24,6 +24,13 @@ test('Returns correct number of blogs', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
+test('Every blog has an ID property', async () => {
+  const response = await api.get('/api/blogs');
+  response.body.map((blog) => {
+    expect(blog.id).toBeDefined();
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
