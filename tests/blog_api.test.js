@@ -44,6 +44,15 @@ describe('POST /api/blogs', () => {
     const blogsInDb = await helper.blogsinDb();
     expect(blogsInDb).toHaveLength(helper.initialBlogs.length + 1);
   });
+
+  test('defaults likes to 0 if not provided', async () => {
+    const response = await api.post('/api/blogs', {
+      title: 'Test',
+      author: 'test',
+      url: 'http://test.com',
+    });
+    expect(response.body.likes).toEqual(0);
+  });
 });
 
 afterAll(() => {
