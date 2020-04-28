@@ -12,22 +12,37 @@ beforeEach(async () => {
   await Promise.all(promises);
 });
 
-test('Blogs are returned as JSON', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+describe('GET /api/blogs', () => {
+  test('returns blogs as JSON', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  });
+  test('returns correct number of blogs', async () => {
+    const response = await api.get('/api/blogs');
+    expect(response.body).toHaveLength(helper.initialBlogs.length);
+  });
+  test('returns ID property on every blog', async () => {
+    const response = await api.get('/api/blogs');
+    response.body.map((blog) => {
+      expect(blog.id).toBeDefined();
+    });
+  });
 });
 
-test('Returns correct number of blogs', async () => {
-  const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(helper.initialBlogs.length);
-});
-
-test('Every blog has an ID property', async () => {
-  const response = await api.get('/api/blogs');
-  response.body.map((blog) => {
-    expect(blog.id).toBeDefined();
+describe('POST /api/blogs', () => {
+  test('successfully creates new blog', async () => {
+    await api
+      .post('/api/blogs', {
+        title: 'Test',
+        author: 'test',
+        url: 'http://test.com',
+        likes: 5,
+      })
+      .expect(201);
+    const blogsInDb = await helper.blogsinDb();
+    expect(blogsInDb).toHaveLength(helper.initialBlogs.length + 1);
   });
 });
 
