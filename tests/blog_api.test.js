@@ -34,7 +34,8 @@ describe('GET /api/blogs', () => {
 describe('POST /api/blogs', () => {
   test('successfully creates new blog', async () => {
     await api
-      .post('/api/blogs', {
+      .post('/api/blogs')
+      .send({
         title: 'Test',
         author: 'test',
         url: 'http://test.com',
@@ -46,12 +47,22 @@ describe('POST /api/blogs', () => {
   });
 
   test('defaults likes to 0 if not provided', async () => {
-    const response = await api.post('/api/blogs', {
+    const response = await api.post('/api/blogs').send({
       title: 'Test',
       author: 'test',
       url: 'http://test.com',
     });
     expect(response.body.likes).toEqual(0);
+  });
+
+  test('400 Bad Request if title and url are missing', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        author: 'test',
+        likes: 5,
+      })
+      .expect(400);
   });
 });
 
