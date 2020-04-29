@@ -12,18 +12,20 @@ beforeEach(async () => {
   await Promise.all(promises);
 });
 
-describe('GET /api/blogs', () => {
-  test('returns blogs as JSON', async () => {
+describe('when there are some blogs saved', () => {
+  test('blogs are returned as JSON', async () => {
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
-  test('returns correct number of blogs', async () => {
+
+  test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs');
     expect(response.body).toHaveLength(helper.initialBlogs.length);
   });
-  test('returns ID property on every blog', async () => {
+
+  test('all blogs have an ID property', async () => {
     const response = await api.get('/api/blogs');
     response.body.map((blog) => {
       expect(blog.id).toBeDefined();
@@ -31,8 +33,8 @@ describe('GET /api/blogs', () => {
   });
 });
 
-describe('POST /api/blogs', () => {
-  test('successfully creates new blog', async () => {
+describe('addition of a new blog', () => {
+  test('succeeds with valid data', async () => {
     await api
       .post('/api/blogs')
       .send({
@@ -42,8 +44,8 @@ describe('POST /api/blogs', () => {
         likes: 5,
       })
       .expect(201);
-    const blogsInDb = await helper.blogsinDb();
-    expect(blogsInDb).toHaveLength(helper.initialBlogs.length + 1);
+    const blogs = await helper.blogsinDb();
+    expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
   });
 
   test('defaults likes to 0 if not provided', async () => {
@@ -55,7 +57,7 @@ describe('POST /api/blogs', () => {
     expect(response.body.likes).toEqual(0);
   });
 
-  test('400 Bad Request if title and url are missing', async () => {
+  test('fails with status code 400 if data is invalid', async () => {
     await api
       .post('/api/blogs')
       .send({
@@ -64,6 +66,27 @@ describe('POST /api/blogs', () => {
       })
       .expect(400);
   });
+});
+
+describe('deleting a blog', () => {
+  test('succeeds with a valid ID', async () => {
+    const blogsAtStart = await helper.blogsinDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    const blogsAtEnd = await helper.blogsinDb();
+    
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+  });
+  
+  test('succeeds with non-existing ID', async () => {
+    const nonExistingId = helper.nonExistingId()
+    await api.delete(`/api/blogs/${nonExistingId}`).expect(204);
+  });
+
+  test('fails with status code 400 if ID is malformatted ', async () => {
+    await api.delete('/api/blogs/jlfhs').expect(400)
+  })
 });
 
 afterAll(() => {

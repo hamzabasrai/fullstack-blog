@@ -22,22 +22,20 @@ const initialBlogs = [
   },
 ];
 
-const nonExistingId = async () => {
+const nonExistingId = () => {
   const blog = new Blog({
     title: 'New Blog',
     author: 'New Author',
     url: 'http://mytestblog.com/808',
     likes: 9,
   });
-  await blog.save();
-  await blog.remove();
 
   return blog._id.toString();
 };
 
 const blogsinDb = async () => {
   const blogs = await Blog.find({});
-  return blogs.map((note) => note.toJSON());
+  return blogs.map((blog) => blog.toJSON());
 };
 
 module.exports = {
