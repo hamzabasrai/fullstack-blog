@@ -75,18 +75,49 @@ describe('deleting a blog', () => {
 
     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
     const blogsAtEnd = await helper.blogsinDb();
-    
+
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
   });
-  
-  test('succeeds with non-existing ID', async () => {
-    const nonExistingId = helper.nonExistingId()
+
+  test('with non-existing ID returns status code 204', async () => {
+    const nonExistingId = helper.nonExistingId();
     await api.delete(`/api/blogs/${nonExistingId}`).expect(204);
   });
 
-  test('fails with status code 400 if ID is malformatted ', async () => {
-    await api.delete('/api/blogs/jlfhs').expect(400)
-  })
+  test('with malformatted ID returns status code 400', async () => {
+    await api.delete('/api/blogs/jlfhs').expect(400);
+  });
+});
+
+describe('updating a blog', () => {
+  test('succeeds with a valid ID and data', async () => {
+    const blogs = await helper.blogsinDb();
+    const blogToUpdate = blogs[0];
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ title: 'Test', author: 'test', url: 'http://test.com', likes: 5 })
+      .expect(200);
+
+    expect(blogToUpdate).not.toEqual(updatedBlog);
+  });
+
+  test('with non-existing ID returns null', async () => {
+    const nonExistingId = helper.nonExistingId();
+    const response = await api
+      .put(`/api/blogs/${nonExistingId}`)
+      .send({ title: 'Test', author: 'test', url: 'http://test.com', likes: 5 })
+      .expect(200);
+
+    expect(response.body).toEqual(null);
+  });
+
+  test('with malformatted ID returns status code 400', async () => {
+    await api
+      .put('/api/blogs/jlfhs')
+      .send({ title: 'Test', author: 'test', url: 'http://test.com', likes: 5 })
+      .expect(400);
+  });
 });
 
 afterAll(() => {
