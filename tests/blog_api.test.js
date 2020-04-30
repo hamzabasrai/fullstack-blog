@@ -1,14 +1,26 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const helper = require('./test_helper');
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const api = supertest(app);
 
+beforeAll(async () => {
+  await User.deleteMany({});
+  const passwordHash = await bcrypt.hash('secret', 10);
+  const user = new User({ username: 'root', passwordHash });
+  await user.save();
+});
+
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const promises = helper.initialBlogs.map((blog) => new Blog(blog).save());
+  const promises = helper.initialBlogs.map(async (blog) => {
+    const user = await User.findOne({});
+    return new Blog({...blog, user: user._id}).save()
+  });
   await Promise.all(promises);
 });
 
@@ -29,6 +41,13 @@ describe('when there are some blogs saved', () => {
     const response = await api.get('/api/blogs');
     response.body.map((blog) => {
       expect(blog.id).toBeDefined();
+    });
+  });
+
+  test('all blogs have a user property', async () => {
+    const response = await api.get('/api/blogs');
+    response.body.map((blog) => {
+      expect(blog.user).toBeDefined();
     });
   });
 });

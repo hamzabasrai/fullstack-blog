@@ -29,6 +29,13 @@ describe('when there is initially one user in db', () => {
     expect(response.body).toHaveLength(1);
   });
 
+  test('all users have blogs property', async () => {
+    const response = await api.get('/api/users');
+    response.body.map((user) => {
+      expect(user.blogs).toBeDefined();
+    });
+  });
+
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb();
 
