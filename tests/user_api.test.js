@@ -50,6 +50,61 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map((u) => u.username);
     expect(usernames).toContain(newUser.username);
   });
+
+  test('creation fails with invalid username', async () => {
+    const newUser = {
+      username: 'h',
+      name: 'Hamza Basrai',
+      password: 'supersecretpassword',
+    };
+
+    const response = await api.post('/api/users').send(newUser).expect(400);
+    const errorMessage = expect.stringMatching(/Path `username`/);
+    expect(response.body.error).toEqual(errorMessage);
+  });
+
+  test('creation fails with non-unique username', async () => {
+    const newUser = {
+      username: 'root',
+      name: 'Hamza Basrai',
+      password: 'supersecretpassword',
+    };
+
+    const response = await api.post('/api/users').send(newUser).expect(400);
+    const errorMessage = expect.stringMatching(
+      /expected `username` to be unique/
+    );
+    expect(response.body.error).toEqual(errorMessage);
+  });
+
+  test('creation fails with invalid password', async () => {
+    const newUser = {
+      username: 'hbasrai',
+      name: 'Hamza Basrai',
+      password: 'su',
+    };
+
+    const response = await api.post('/api/users').send(newUser).expect(400);
+    const errorMessage = expect.stringMatching(
+      /Password must be minimum 3 characters long/
+    );
+    expect(response.body.error).toEqual(errorMessage);
+  });
+
+  test('invalid user is not created in db', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'h',
+      name: 'Hamza Basrai',
+      password: 'supersecretpassword',
+    };
+
+    await api.post('/api/users').send(newUser).expect(400);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
 });
 
 afterAll(() => {
