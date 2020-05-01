@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
@@ -19,7 +20,7 @@ beforeEach(async () => {
   await Blog.deleteMany({});
   const promises = helper.initialBlogs.map(async (blog) => {
     const user = await User.findOne({});
-    return new Blog({...blog, user: user._id}).save()
+    return new Blog({ ...blog, user: user._id }).save();
   });
   await Promise.all(promises);
 });
@@ -53,9 +54,19 @@ describe('when there are some blogs saved', () => {
 });
 
 describe('addition of a new blog', () => {
+  let token;
+  let userId;
+  beforeAll(async () => {
+    const users = await helper.usersInDb();
+    const userForToken = { username: users[0].username, id: users[0].id };
+    userId = userForToken.id;
+    token = jwt.sign(userForToken, process.env.SECRET);
+  });
+
   test('succeeds with valid data', async () => {
-    await api
+    const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'Test',
         author: 'test',
@@ -63,22 +74,29 @@ describe('addition of a new blog', () => {
         likes: 5,
       })
       .expect(201);
+
+    expect(response.body.user).toEqual(userId);
+
     const blogs = await helper.blogsinDb();
     expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
   });
 
   test('defaults likes to 0 if not provided', async () => {
-    const response = await api.post('/api/blogs').send({
-      title: 'Test',
-      author: 'test',
-      url: 'http://test.com',
-    });
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'Test',
+        author: 'test',
+        url: 'http://test.com',
+      });
     expect(response.body.likes).toEqual(0);
   });
 
   test('fails with status code 400 if data is invalid', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         author: 'test',
         likes: 5,
