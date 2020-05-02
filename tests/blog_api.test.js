@@ -103,6 +103,17 @@ describe('addition of a new blog', () => {
       })
       .expect(400);
   });
+
+  test('fails with status code 401 if token is not provided', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        title: 'Test',
+        author: 'test',
+        url: 'http://test.com',
+      })
+      .expect(401);
+  });
 });
 
 describe('deleting a blog', () => {
