@@ -106,11 +106,23 @@ describe('addition of a new blog', () => {
 });
 
 describe('deleting a blog', () => {
+  let token;
+  let userId;
+  beforeAll(async () => {
+    const users = await helper.usersInDb();
+    const userForToken = { username: users[0].username, id: users[0].id };
+    userId = userForToken.id;
+    token = jwt.sign(userForToken, process.env.SECRET);
+  });
+
   test('succeeds with a valid ID', async () => {
     const blogsAtStart = await helper.blogsinDb();
     const blogToDelete = blogsAtStart[0];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204);
     const blogsAtEnd = await helper.blogsinDb();
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
@@ -118,11 +130,36 @@ describe('deleting a blog', () => {
 
   test('with non-existing ID returns status code 204', async () => {
     const nonExistingId = helper.nonExistingId();
-    await api.delete(`/api/blogs/${nonExistingId}`).expect(204);
+    await api
+      .delete(`/api/blogs/${nonExistingId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204);
   });
 
   test('with malformatted ID returns status code 400', async () => {
-    await api.delete('/api/blogs/jlfhs').expect(400);
+    await api
+      .delete('/api/blogs/jlfhs')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+  });
+
+  test('with missing token returns status code 401', async () => {
+    const blogsAtStart = await helper.blogsinDb();
+    const blogToDelete = blogsAtStart[0];
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(401);
+  });
+
+  test('with invalid token returns status code 401', async () => {
+    const blogsAtStart = await helper.blogsinDb();
+    const blogToDelete = blogsAtStart[0];
+    const invalidToken = helper.invalidUserToken();
+
+    const response = await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${invalidToken}`)
+      .expect(401);
+    const errorMessage = expect.stringMatching(/Missing or invalid token/);
+    expect(response.body.error).toEqual(errorMessage);
   });
 });
 
