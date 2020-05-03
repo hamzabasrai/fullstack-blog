@@ -4,8 +4,8 @@
   "description": "Blog list application",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development nodemon index.js",
+    "start": "NODE_ENV=production node server/index.js",
+    "dev": "NODE_ENV=development nodemon server/index.js",
     "test": "NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "Hamza Basrai",
@@ -27,6 +27,10 @@
     "supertest": "^4.0.2"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "rootDir": "server"
+  },
+  "nodemonConfig": {
+    "ignore": ["blog-ui"]
   }
 }
