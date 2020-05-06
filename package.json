@@ -22,7 +22,7 @@
     "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
-    "jest": "^25.4.0",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.3",
     "supertest": "^4.0.2"
   },
