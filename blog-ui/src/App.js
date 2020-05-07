@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from 'emotion';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
@@ -10,12 +10,21 @@ function App() {
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  useEffect(() => {
+    const currentUser = window.localStorage.getItem('currentUser');
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      setUser(user);
+    }
+  }, []);
+
   const handleNameChange = (event) => setUsername(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
+      window.localStorage.setItem('currentUser', JSON.stringify(user));
       setUser(user);
       setUsername('');
       setPassword('');
@@ -23,6 +32,10 @@ function App() {
       setErrorMessage('Invalid credentials');
       setTimeout(() => setErrorMessage(null), 3000);
     }
+  };
+  const handleLogout = () => {
+    window.localStorage.removeItem('currentUser');
+    setUser(null);
   };
 
   return (
@@ -40,7 +53,7 @@ function App() {
           handleLogin={handleLogin}
         />
       ) : (
-        <Home name={user.name} />
+        <Home name={user.name} handleLogout={handleLogout} />
       )}
       <p
         className={css`
