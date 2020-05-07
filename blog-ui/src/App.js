@@ -3,6 +3,7 @@ import { css } from 'emotion';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import loginService from './services/loginService';
+import blogService from './services/blogService'
 
 function App() {
   const [username, setUsername] = useState('');
@@ -14,6 +15,7 @@ function App() {
     const currentUser = window.localStorage.getItem('currentUser');
     if (currentUser) {
       const user = JSON.parse(currentUser);
+      blogService.setToken(user.token);
       setUser(user);
     }
   }, []);
@@ -25,6 +27,7 @@ function App() {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('currentUser', JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -41,7 +44,7 @@ function App() {
   return (
     <div
       className={css`
-        padding: 5% 5%;
+        padding: 3% 5%;
       `}
     >
       {user === null ? (

@@ -2,9 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { css } from 'emotion';
 import blogService from '../services/blogService';
 import Blog from './Blog';
+import AddBlogForm from './AddBlogForm';
 
 const Home = ({ name, handleLogout }) => {
   const [blogs, setBlogs] = useState([]);
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogAuthor, setBlogAuthor] = useState('');
+  const [blogUrl, setBlogUrl] = useState('');
+
+  const handleChange = (event) => {
+    switch (event.target.name) {
+      case 'title':
+        setBlogTitle(event.target.value);
+        break;
+      case 'author':
+        setBlogAuthor(event.target.value);
+        break;
+      case 'url':
+        setBlogUrl(event.target.value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addBlog = async (event) => {
+    event.preventDefault();
+    try {
+      const blog = { title: blogTitle, author: blogAuthor, url: blogUrl };
+      const newBlog = await blogService.create(blog);
+      setBlogs(blogs.concat(newBlog));
+      setBlogTitle('');
+      setBlogAuthor('');
+      setBlogUrl('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -56,9 +90,26 @@ const Home = ({ name, handleLogout }) => {
           Logout
         </button>
       </div>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <div
+        className={css`
+          display: grid;
+          grid-template-rows: 1fr 4fr;
+          grid-column-gap: 2em;
+        `}
+      >
+        <AddBlogForm
+          title={blogTitle}
+          author={blogAuthor}
+          url={blogUrl}
+          handleChange={handleChange}
+          addBlog={addBlog}
+        />
+        <div>
+          {blogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </div>
+      </div>
     </>
   );
 };
