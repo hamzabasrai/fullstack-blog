@@ -9,6 +9,7 @@ const Home = ({ name, handleLogout }) => {
   const [blogTitle, setBlogTitle] = useState('');
   const [blogAuthor, setBlogAuthor] = useState('');
   const [blogUrl, setBlogUrl] = useState('');
+  const [notification, setNotification] = useState(null);
 
   const handleChange = (event) => {
     switch (event.target.name) {
@@ -35,8 +36,12 @@ const Home = ({ name, handleLogout }) => {
       setBlogTitle('');
       setBlogAuthor('');
       setBlogUrl('');
+      setNotification(`Added '${newBlog.title}' by ${newBlog.author}`);
+      setTimeout(() => setNotification(null), 3000);
     } catch (error) {
       console.log(error);
+      setNotification('Failed to add new blog');
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -105,6 +110,13 @@ const Home = ({ name, handleLogout }) => {
           addBlog={addBlog}
         />
         <div>
+          <p
+            className={css`
+              text-align: center;
+            `}
+          >
+            {notification}
+          </p>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
