@@ -25,6 +25,20 @@ const Home = ({ name, handleLogout }) => {
     }
   };
 
+  const updateBlog = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog);
+      const newBlogs = blogs.map((blog) =>
+        blog.id === updatedBlog.id ? updatedBlog : blog
+      );
+      setBlogs(newBlogs);
+    } catch (error) {
+      console.log(error);
+      setNotification('Failed to update blog');
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -94,7 +108,7 @@ const Home = ({ name, handleLogout }) => {
             {notification}
           </p>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
           ))}
         </div>
       </div>

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   const buttonLabel = detailsVisible ? 'Hide' : 'View';
   const showDetails = { display: detailsVisible ? '' : 'none' };
 
   const toggleDetails = () => setDetailsVisible(!detailsVisible);
+
+  const incrementLikes = () => {
+    updateBlog({ ...blog, likes: blog.likes + 1 });
+  };
 
   return (
     <div
@@ -80,6 +84,7 @@ const Blog = ({ blog }) => {
             className={css`
               margin: 0 10px;
             `}
+            onClick={incrementLikes}
           >
             Like
           </button>
