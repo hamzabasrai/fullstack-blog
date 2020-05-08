@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
+  const user = JSON.parse(window.localStorage.getItem('currentUser'));
 
   const buttonLabel = detailsVisible ? 'Hide' : 'View';
   const showDetails = { display: detailsVisible ? '' : 'none' };
@@ -11,6 +12,16 @@ const Blog = ({ blog, updateBlog }) => {
 
   const incrementLikes = () => {
     updateBlog({ ...blog, likes: blog.likes + 1 });
+  };
+
+  const showDelete = {
+    display: user.username === blog.user.username ? '' : 'none',
+  };
+
+  const deleteBlog = () => {
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
+      removeBlog(blog);
+    }
   };
 
   return (
@@ -54,6 +65,8 @@ const Blog = ({ blog, updateBlog }) => {
       <div
         style={showDetails}
         className={css`
+          display: flex;
+          flex-direction: column;
           margin: 10px 0;
           * {
             margin: 2px 0;
@@ -70,7 +83,7 @@ const Blog = ({ blog, updateBlog }) => {
           className={css`
             display: flex;
             flex-direction: row;
-            align-items: baseline;
+            align-items: center;
           `}
         >
           <h5
@@ -83,6 +96,16 @@ const Blog = ({ blog, updateBlog }) => {
           <button
             className={css`
               margin: 0 10px;
+              padding: 0.25em 1.2em;
+              border: 0.1em solid #000000;
+              border-radius: 0.25em;
+              color: #ecf0f1;
+              transition: all 0.2s;
+              background-color: #3498db;
+              &:hover {
+                color: #ffffff;
+                background-color: #2980b9;
+              }
             `}
             onClick={incrementLikes}
           >
@@ -90,6 +113,25 @@ const Blog = ({ blog, updateBlog }) => {
           </button>
         </div>
         <h5>Submitted by - {blog.user.name}</h5>
+        <button
+          style={showDelete}
+          className={css`
+            align-self: center;
+            padding: 0.35em 1.2em;
+            border: 0.1em solid #000000;
+            border-radius: 0.25em;
+            color: #ecf0f1;
+            transition: all 0.2s;
+            background-color: #95a5a6;
+            &:hover {
+              color: #ffffff;
+              background-color: #e74c3c;
+            }
+          `}
+          onClick={deleteBlog}
+        >
+          Delete Blog
+        </button>
       </div>
     </div>
   );

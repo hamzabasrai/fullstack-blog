@@ -11,6 +11,8 @@ const Home = ({ name, handleLogout }) => {
 
   const blogFormRef = createRef();
 
+  const sortByLikes = (blog1, blog2) => blog2.likes - blog1.likes;
+
   const createBlog = async (blog) => {
     try {
       blogFormRef.current.toggleVisibility();
@@ -32,7 +34,7 @@ const Home = ({ name, handleLogout }) => {
       const newBlogs = blogs.map((blog) =>
         blog.id === updatedBlog.id ? updatedBlog : blog
       );
-      newBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
+      newBlogs.sort(sortByLikes);
       setBlogs(newBlogs);
     } catch (error) {
       console.log(error);
@@ -41,11 +43,29 @@ const Home = ({ name, handleLogout }) => {
     }
   };
 
+  const removeBlog = async (blogToDelete) => {
+    try {
+      await blogService.remove(blogToDelete.id);
+      const newBlogs = blogs
+        .filter((blog) => blog.id !== blogToDelete.id)
+        .sort(sortByLikes);
+      setBlogs(newBlogs);
+      setNotification(
+        `Deleted ${blogToDelete.title} by ${blogToDelete.author}`
+      );
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error) {
+      console.log(error);
+      setNotification('Failed to delete blog');
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const blogData = await blogService.getAll();
-        blogData.sort((blog1, blog2) => blog2.likes - blog1.likes);
+        blogData.sort(sortByLikes);
         setBlogs(blogData);
       } catch (error) {
         console.log(error);
@@ -111,7 +131,12 @@ const Home = ({ name, handleLogout }) => {
             {notification}
           </p>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              removeBlog={removeBlog}
+            />
           ))}
         </div>
       </div>
