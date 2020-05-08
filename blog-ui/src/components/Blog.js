@@ -3,10 +3,14 @@ import { css } from 'emotion';
 
 const Blog = ({ blog }) => {
   return (
-    <div>
+    <div
+      className={css`
+        margin: 10px 0;
+      `}
+    >
       <h3
         className={css`
-          margin-block-end: 0;
+          margin: 0;
         `}
       >
         {blog.title}

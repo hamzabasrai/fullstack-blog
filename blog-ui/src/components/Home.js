@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import { css } from 'emotion';
 import blogService from '../services/blogService';
 import Blog from './Blog';
 import AddBlogForm from './AddBlogForm';
+import Togglable from './Togglable';
 
 const Home = ({ name, handleLogout }) => {
   const [blogs, setBlogs] = useState([]);
@@ -10,6 +11,8 @@ const Home = ({ name, handleLogout }) => {
   const [blogAuthor, setBlogAuthor] = useState('');
   const [blogUrl, setBlogUrl] = useState('');
   const [notification, setNotification] = useState(null);
+
+  const blogFormRef = createRef();
 
   const handleChange = (event) => {
     switch (event.target.name) {
@@ -30,6 +33,7 @@ const Home = ({ name, handleLogout }) => {
   const addBlog = async (event) => {
     event.preventDefault();
     try {
+      blogFormRef.current.toggleVisibility();
       const blog = { title: blogTitle, author: blogAuthor, url: blogUrl };
       const newBlog = await blogService.create(blog);
       setBlogs(blogs.concat(newBlog));
@@ -97,18 +101,20 @@ const Home = ({ name, handleLogout }) => {
       </div>
       <div
         className={css`
-          display: grid;
-          grid-template-rows: 1fr 4fr;
-          grid-column-gap: 2em;
+          display: flex;
+          flex-direction: column;
+          margin: 5px 0;
         `}
       >
-        <AddBlogForm
-          title={blogTitle}
-          author={blogAuthor}
-          url={blogUrl}
-          handleChange={handleChange}
-          addBlog={addBlog}
-        />
+        <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
+          <AddBlogForm
+            title={blogTitle}
+            author={blogAuthor}
+            url={blogUrl}
+            handleChange={handleChange}
+            addBlog={addBlog}
+          />
+        </Togglable>
         <div>
           <p
             className={css`
