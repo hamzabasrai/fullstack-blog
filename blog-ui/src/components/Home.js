@@ -15,7 +15,8 @@ const Home = ({ name, handleLogout }) => {
     try {
       blogFormRef.current.toggleVisibility();
       const newBlog = await blogService.create(blog);
-      setBlogs(blogs.concat(newBlog));
+      const newBlogs = blogs.concat(newBlog);
+      setBlogs(newBlogs);
       setNotification(`Added '${newBlog.title}' by ${newBlog.author}`);
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -31,6 +32,7 @@ const Home = ({ name, handleLogout }) => {
       const newBlogs = blogs.map((blog) =>
         blog.id === updatedBlog.id ? updatedBlog : blog
       );
+      newBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
       setBlogs(newBlogs);
     } catch (error) {
       console.log(error);
@@ -43,6 +45,7 @@ const Home = ({ name, handleLogout }) => {
     const fetchBlogs = async () => {
       try {
         const blogData = await blogService.getAll();
+        blogData.sort((blog1, blog2) => blog2.likes - blog1.likes);
         setBlogs(blogData);
       } catch (error) {
         console.log(error);
@@ -108,7 +111,7 @@ const Home = ({ name, handleLogout }) => {
             {notification}
           </p>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
           ))}
         </div>
       </div>
