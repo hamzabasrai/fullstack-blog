@@ -18,7 +18,10 @@ blogRouter.post('/', async (req, res) => {
   const blog = await new Blog({ ...req.body, user: user._id }).save();
   user.blogs = user.blogs.concat(blog._id);
   await user.save();
-  res.status(201).json(blog);
+  const populatedBlog = await blog
+    .populate('user', { username: 1, name: 1 })
+    .execPopulate();
+  res.status(201).json(populatedBlog);
 });
 
 blogRouter.delete('/:id', async (req, res) => {
@@ -27,7 +30,8 @@ blogRouter.delete('/:id', async (req, res) => {
     return res.status(401).json({ error: 'Missing or invalid token' });
   }
   const blogToDelete = await Blog.findById(req.params.id);
-  if (blogToDelete === null) { // Non-existing ID
+  if (blogToDelete === null) {
+    // Non-existing ID
     return res.status(204).end();
   } else if (blogToDelete.user.toString() !== decodedToken.id.toString()) {
     return res
@@ -48,7 +52,7 @@ blogRouter.put('/:id', async (req, res) => {
 
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
     new: true,
-  });
+  }).populate('user', { username: 1, name: 1 });
 
   res.json(updatedBlog);
 });
