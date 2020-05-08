@@ -7,39 +7,15 @@ import Togglable from './Togglable';
 
 const Home = ({ name, handleLogout }) => {
   const [blogs, setBlogs] = useState([]);
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogAuthor, setBlogAuthor] = useState('');
-  const [blogUrl, setBlogUrl] = useState('');
   const [notification, setNotification] = useState(null);
 
   const blogFormRef = createRef();
 
-  const handleChange = (event) => {
-    switch (event.target.name) {
-      case 'title':
-        setBlogTitle(event.target.value);
-        break;
-      case 'author':
-        setBlogAuthor(event.target.value);
-        break;
-      case 'url':
-        setBlogUrl(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const addBlog = async (event) => {
-    event.preventDefault();
+  const createBlog = async (blog) => {
     try {
       blogFormRef.current.toggleVisibility();
-      const blog = { title: blogTitle, author: blogAuthor, url: blogUrl };
       const newBlog = await blogService.create(blog);
       setBlogs(blogs.concat(newBlog));
-      setBlogTitle('');
-      setBlogAuthor('');
-      setBlogUrl('');
       setNotification(`Added '${newBlog.title}' by ${newBlog.author}`);
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -107,13 +83,7 @@ const Home = ({ name, handleLogout }) => {
         `}
       >
         <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
-          <AddBlogForm
-            title={blogTitle}
-            author={blogAuthor}
-            url={blogUrl}
-            handleChange={handleChange}
-            addBlog={addBlog}
-          />
+          <AddBlogForm createBlog={createBlog} />
         </Togglable>
         <div>
           <p

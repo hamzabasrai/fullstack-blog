@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from 'emotion';
 
 const blockLabel = css`
@@ -11,7 +11,36 @@ const inlineBlock = css`
   margin: 0 10px;
 `;
 
-const AddBlogForm = ({ title, author, url, handleChange, addBlog }) => {
+const AddBlogForm = ({ createBlog }) => {
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogAuthor, setBlogAuthor] = useState('');
+  const [blogUrl, setBlogUrl] = useState('');
+
+  const handleChange = (event) => {
+    switch (event.target.name) {
+      case 'title':
+        setBlogTitle(event.target.value);
+        break;
+      case 'author':
+        setBlogAuthor(event.target.value);
+        break;
+      case 'url':
+        setBlogUrl(event.target.value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addBlog = (event) => {
+    event.preventDefault();
+    const blog = { title: blogTitle, author: blogAuthor, url: blogUrl };
+    createBlog(blog);
+    setBlogTitle('');
+    setBlogAuthor('');
+    setBlogUrl('');
+  };
+
   return (
     <div
       className={css`
@@ -37,7 +66,7 @@ const AddBlogForm = ({ title, author, url, handleChange, addBlog }) => {
               type="text"
               name="title"
               id="title"
-              value={title}
+              value={blogTitle}
               onChange={handleChange}
             />
           </div>
@@ -49,7 +78,7 @@ const AddBlogForm = ({ title, author, url, handleChange, addBlog }) => {
               type="text"
               name="author"
               id="author"
-              value={author}
+              value={blogAuthor}
               onChange={handleChange}
             />
           </div>
@@ -61,7 +90,7 @@ const AddBlogForm = ({ title, author, url, handleChange, addBlog }) => {
               type="text"
               name="url"
               id="url"
-              value={url}
+              value={blogUrl}
               onChange={handleChange}
             />
           </div>
