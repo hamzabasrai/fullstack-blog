@@ -43,3 +43,14 @@ test('renders details when button is toggled', () => {
   fireEvent.click(toggleDetails);
   expect(details).not.toHaveStyle('display: none');
 });
+
+test('event handler is called when like button is clicked', () => {
+  const updateBlog = jest.fn();
+  const component = render(<Blog blog={blog} updateBlog={updateBlog} />);
+
+  const likeButton = component.container.querySelector('#like-button');
+  fireEvent.click(likeButton);
+  fireEvent.click(likeButton);
+
+  expect(updateBlog.mock.calls).toHaveLength(2);
+});

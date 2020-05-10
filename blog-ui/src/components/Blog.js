@@ -89,6 +89,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             Likes - {blog.likes}
           </h5>
           <button
+            id="like-button"
             className={css`
               margin: 0 10px;
               padding: 0.25em 1.2em;
