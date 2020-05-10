@@ -46,8 +46,8 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
               margin: 0;
             }
           `}>
-          <h3>{blog.title}</h3>
-          <h4>by {blog.author}</h4>
+          <h3 id="title">{blog.title}</h3>
+          <h4 id="author">by {blog.author}</h4>
         </div>
         <button
           className={css`
@@ -59,6 +59,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         </button>
       </div>
       <div
+        id="details"
         style={showDetails}
         className={css`
           display: flex;
