@@ -3,7 +3,7 @@ import { css } from 'emotion';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import loginService from './services/loginService';
-import blogService from './services/blogService'
+import blogService from './services/blogService';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -45,8 +45,7 @@ function App() {
     <div
       className={css`
         padding: 3% 5%;
-      `}
-    >
+      `}>
       {user === null ? (
         <LoginForm
           username={username}
@@ -62,8 +61,7 @@ function App() {
         className={css`
           color: red;
           text-align: center;
-        `}
-      >
+        `}>
         {errorMessage}
       </p>
     </div>

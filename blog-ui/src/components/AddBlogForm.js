@@ -47,13 +47,11 @@ const AddBlogForm = ({ createBlog }) => {
         border: 1px solid black;
         padding: 10px;
         margin: 10px 0;
-      `}
-    >
+      `}>
       <h2
         className={css`
           margin: 0;
-        `}
-      >
+        `}>
         Add a Blog
       </h2>
       <div>

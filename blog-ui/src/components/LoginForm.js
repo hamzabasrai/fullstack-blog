@@ -18,8 +18,7 @@ const LoginForm = ({
         display: flex;
         flex-direction: column;
         align-items: center;
-      `}
-    >
+      `}>
       <h1>Login to view blogs</h1>
       <form onSubmit={handleLogin}>
         <div>
@@ -40,10 +39,14 @@ const LoginForm = ({
             onChange={handlePasswordChange}
           />
         </div>
-        <button type="submit" className={css`
-          width: 100%;
-          margin: 10px 0;
-        `}>Login</button>
+        <button
+          type="submit"
+          className={css`
+            width: 100%;
+            margin: 10px 0;
+          `}>
+          Login
+        </button>
       </form>
     </div>
   );

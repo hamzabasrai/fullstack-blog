@@ -30,15 +30,13 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         margin: 10px 0;
         padding: 5px;
         border: thick groove goldenrod;
-      `}
-    >
+      `}>
       <div
         className={css`
           display: flex;
           flex-direction: row;
           align-items: center;
-        `}
-      >
+        `}>
         <div
           className={css`
             display: inline-block;
@@ -47,8 +45,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             h4 {
               margin: 0;
             }
-          `}
-        >
+          `}>
           <h3>{blog.title}</h3>
           <h4>by {blog.author}</h4>
         </div>
@@ -57,8 +54,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             margin: 0 15px;
             flex: 0 1 auto;
           `}
-          onClick={toggleDetails}
-        >
+          onClick={toggleDetails}>
           {buttonLabel}
         </button>
       </div>
@@ -71,8 +67,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
           * {
             margin: 2px 0;
           }
-        `}
-      >
+        `}>
         <h5>
           Link -{' '}
           <a href={blog.url} target="_blank" rel="noopener noreferrer">
@@ -84,13 +79,11 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             display: flex;
             flex-direction: row;
             align-items: center;
-          `}
-        >
+          `}>
           <h5
             className={css`
               display: inline-block;
-            `}
-          >
+            `}>
             Likes - {blog.likes}
           </h5>
           <button
@@ -107,8 +100,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
                 background-color: #2980b9;
               }
             `}
-            onClick={incrementLikes}
-          >
+            onClick={incrementLikes}>
             Like
           </button>
         </div>
@@ -128,8 +120,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
               background-color: #e74c3c;
             }
           `}
-          onClick={deleteBlog}
-        >
+          onClick={deleteBlog}>
           Delete Blog
         </button>
       </div>

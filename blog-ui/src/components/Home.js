@@ -81,25 +81,21 @@ const Home = ({ name, handleLogout }) => {
           display: flex;
           flex-direction: row;
           align-items: baseline;
-        `}
-      >
+        `}>
         <div
           className={css`
             flex: 1 0 auto;
-          `}
-        >
+          `}>
           <h1
             className={css`
               margin: 0;
-            `}
-          >
+            `}>
             Blogs
           </h1>
           <h5
             className={css`
               margin: 0;
-            `}
-          >
+            `}>
             {name} is logged in
           </h5>
         </div>
@@ -107,8 +103,7 @@ const Home = ({ name, handleLogout }) => {
           className={css`
             flex: 0 1 auto;
           `}
-          onClick={handleLogout}
-        >
+          onClick={handleLogout}>
           Logout
         </button>
       </div>
@@ -117,8 +112,7 @@ const Home = ({ name, handleLogout }) => {
           display: flex;
           flex-direction: column;
           margin: 5px 0;
-        `}
-      >
+        `}>
         <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
           <AddBlogForm createBlog={createBlog} />
         </Togglable>
@@ -126,8 +120,7 @@ const Home = ({ name, handleLogout }) => {
           <p
             className={css`
               text-align: center;
-            `}
-          >
+            `}>
             {notification}
           </p>
           {blogs.map((blog) => (
