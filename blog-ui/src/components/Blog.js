@@ -50,6 +50,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
           <h4 id="author">by {blog.author}</h4>
         </div>
         <button
+          id="toggle-details"
           className={css`
             margin: 0 15px;
             flex: 0 1 auto;

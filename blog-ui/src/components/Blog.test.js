@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import Blog from './Blog';
 
 window.localStorage.setItem(
@@ -31,4 +31,15 @@ test('renders blog title & author but no details', () => {
   expect(title).toHaveTextContent('My First Blog');
   expect(author).toHaveTextContent('Hamza Basrai');
   expect(details).toHaveStyle('display: none');
+});
+
+test('renders details when button is toggled', () => {
+  const component = render(<Blog blog={blog} />);
+
+  const toggleDetails = component.container.querySelector('#toggle-details');
+  const details = component.container.querySelector('#details');
+
+  expect(details).toHaveStyle('display: none');
+  fireEvent.click(toggleDetails);
+  expect(details).not.toHaveStyle('display: none');
 });
