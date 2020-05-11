@@ -37,4 +37,23 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)');
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'tester9000', password: 'testPassword' });
+    });
+
+    it('a blog can be created', function () {
+      cy.get('#toggle-button').should('contain.text', 'Add Blog').click();
+      cy.get('form').as('BlogForm');
+
+      cy.get('@BlogForm').get('#title').type('My Blog Title');
+      cy.get('@BlogForm').get('#author').type('Jimbo James');
+      cy.get('@BlogForm').get('#url').type('https://google.com');
+      cy.get('@BlogForm').get('#add-blog-submit').click();
+
+      cy.get('h3').should('contain.text', 'My Blog Title');
+      cy.get('h4').should('contain.text', 'Jimbo James');
+    });
+  });
 });

@@ -92,7 +92,7 @@ const AddBlogForm = ({ createBlog }) => {
               onChange={handleChange}
             />
           </div>
-          <button type="submit" className={inlineBlock}>
+          <button id="add-blog-submit" type="submit" className={inlineBlock}>
             Add Blog
           </button>
         </form>
