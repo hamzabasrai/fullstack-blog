@@ -83,6 +83,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             align-items: center;
           `}>
           <h5
+            id="likes"
             className={css`
               display: inline-block;
             `}>

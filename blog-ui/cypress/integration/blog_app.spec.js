@@ -1,12 +1,14 @@
+before(function () {
+  cy.fixture('users').as('users');
+  cy.fixture('blogs').as('blogs');
+});
+
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
-    const user = {
-      name: 'Tester',
-      username: 'tester9000',
-      password: 'testPassword',
-    };
-    cy.request('POST', 'http://localhost:3001/api/users', user);
+    this.users.map((user) =>
+      cy.request('POST', 'http://localhost:3001/api/users', user)
+    );
     cy.visit('http://localhost:3000');
   });
 
@@ -20,11 +22,11 @@ describe('Blog app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
-      cy.get('#username').type('tester9000');
-      cy.get('#password').type('testPassword');
+      cy.get('#username').type(this.users[0].username);
+      cy.get('#password').type(this.users[0].password);
       cy.get('#login-button').click();
 
-      cy.contains('Tester is logged in');
+      cy.contains(`${this.users[0].name} is logged in`);
     });
 
     it('fails with invalid credentials', function () {
@@ -40,20 +42,36 @@ describe('Blog app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.login({ username: 'tester9000', password: 'testPassword' });
+      cy.login({
+        username: this.users[0].username,
+        password: this.users[0].password,
+      });
+      cy.createBlog(this.blogs[0]);
+      cy.login({
+        username: this.users[1].username,
+        password: this.users[1].password,
+      });
+      cy.visit('http://localhost:3000');
     });
 
     it('a blog can be created', function () {
       cy.get('#toggle-button').should('contain.text', 'Add Blog').click();
       cy.get('form').as('BlogForm');
 
-      cy.get('@BlogForm').get('#title').type('My Blog Title');
-      cy.get('@BlogForm').get('#author').type('Jimbo James');
-      cy.get('@BlogForm').get('#url').type('https://google.com');
+      cy.get('@BlogForm').get('#title').type(this.blogs[1].title);
+      cy.get('@BlogForm').get('#author').type(this.blogs[1].author);
+      cy.get('@BlogForm').get('#url').type(this.blogs[1].url);
       cy.get('@BlogForm').get('#add-blog-submit').click();
 
-      cy.get('h3').should('contain.text', 'My Blog Title');
-      cy.get('h4').should('contain.text', 'Jimbo James');
+      cy.get('h3').should('contain.text', this.blogs[1].title);
+      cy.get('h4').should('contain.text', this.blogs[1].author);
+    });
+
+    it('a user can like a blog', function () {
+      cy.get('#toggle-details').click();
+      cy.get('#likes').contains(this.blogs[0].likes);
+      cy.get('#like-button').click();
+      cy.get('#likes').contains(this.blogs[0].likes + 1);
     });
   });
 });
