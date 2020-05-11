@@ -26,6 +26,7 @@ const Blog = ({ blog, updateBlog, removeBlog, index }) => {
 
   return (
     <div
+      id={`blog-${index}`}
       className={css`
         margin: 10px 0;
         padding: 5px;

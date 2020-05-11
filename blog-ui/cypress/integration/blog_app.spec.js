@@ -42,6 +42,7 @@ describe('Blog app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
+      this.sortedBlogs = this.blogs.concat().sort((a, b) => b.likes - a.likes);
       cy.login({
         username: this.users[0].username,
         password: this.users[0].password,
@@ -76,18 +77,28 @@ describe('Blog app', function () {
 
     it('a user can delete their own blog', function () {
       cy.createBlog(this.blogs[1]);
-      cy.get('#toggle-details-1').click();
-      cy.get('#details-1').get('#delete-button-1').click();
+
+      // Find position of newly created blog in order to delete it
+      const index = this.sortedBlogs.indexOf(this.blogs[1]);
+
+      cy.get(`#toggle-details-${index}`).click();
+      cy.get(`#details-${index}`).get(`#delete-button-${index}`).click();
 
       cy.get('body').should('not.contain.text', this.blogs[1].title);
       cy.get('body').should('not.contain.text', this.blogs[1].author);
     });
 
     it('a user cannot delete another users blog', function () {
+      // Blog 0 is added by another user in the beforeEach block
       cy.get('#toggle-details-0').click();
       cy.get('#details-0')
         .get('#delete-button-0')
         .should('have.css', 'display', 'none');
+    });
+
+    it('blogs are ordered by likes', function () {
+      cy.createBlog(this.blogs[1]);
+      cy.get('#blog-0').should('contain.text', this.sortedBlogs[0].title);
     });
   });
 });
