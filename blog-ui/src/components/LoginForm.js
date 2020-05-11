@@ -20,11 +20,12 @@ const LoginForm = ({
         align-items: center;
       `}>
       <h1>Login to view blogs</h1>
-      <form onSubmit={handleLogin}>
+      <form id="login-form" onSubmit={handleLogin}>
         <div>
           <label className={blockLabel}>Username</label>
           <input
             type="text"
+            id="username"
             name="username"
             value={username}
             onChange={handleNameChange}
@@ -34,12 +35,14 @@ const LoginForm = ({
           <label className={blockLabel}>Password</label>
           <input
             type="password"
+            id="password"
             name="password"
             value={password}
             onChange={handlePasswordChange}
           />
         </div>
         <button
+          id="login-button"
           type="submit"
           className={css`
             width: 100%;
