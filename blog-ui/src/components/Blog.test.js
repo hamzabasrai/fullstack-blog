@@ -22,11 +22,11 @@ const blog = {
 };
 
 test('renders blog title & author but no details', () => {
-  const component = render(<Blog blog={blog} />);
+  const component = render(<Blog blog={blog} index="0" />);
 
-  const title = component.container.querySelector('#title');
-  const author = component.container.querySelector('#author');
-  const details = component.container.querySelector('#details');
+  const title = component.container.querySelector('#title-0');
+  const author = component.container.querySelector('#author-0');
+  const details = component.container.querySelector('#details-0');
 
   expect(title).toHaveTextContent('My First Blog');
   expect(author).toHaveTextContent('Hamza Basrai');
@@ -34,10 +34,10 @@ test('renders blog title & author but no details', () => {
 });
 
 test('renders details when button is toggled', () => {
-  const component = render(<Blog blog={blog} />);
+  const component = render(<Blog blog={blog} index="0" />);
 
-  const toggleDetails = component.container.querySelector('#toggle-details');
-  const details = component.container.querySelector('#details');
+  const toggleDetails = component.container.querySelector('#toggle-details-0');
+  const details = component.container.querySelector('#details-0');
 
   expect(details).toHaveStyle('display: none');
   fireEvent.click(toggleDetails);
@@ -46,9 +46,11 @@ test('renders details when button is toggled', () => {
 
 test('event handler is called when like button is clicked', () => {
   const updateBlog = jest.fn();
-  const component = render(<Blog blog={blog} updateBlog={updateBlog} />);
+  const component = render(
+    <Blog blog={blog} updateBlog={updateBlog} index="0" />
+  );
 
-  const likeButton = component.container.querySelector('#like-button');
+  const likeButton = component.container.querySelector('#like-button-0');
   fireEvent.click(likeButton);
   fireEvent.click(likeButton);
 
