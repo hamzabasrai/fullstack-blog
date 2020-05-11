@@ -33,7 +33,7 @@ function App() {
       setPassword('');
     } catch (error) {
       setErrorMessage('Invalid credentials');
-      setTimeout(() => setErrorMessage(null), 3000);
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
   const handleLogout = () => {
@@ -58,6 +58,7 @@ function App() {
         <Home name={user.name} handleLogout={handleLogout} />
       )}
       <p
+        id="error-msg"
         className={css`
           color: red;
           text-align: center;
