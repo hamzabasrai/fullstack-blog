@@ -68,10 +68,26 @@ describe('Blog app', function () {
     });
 
     it('a user can like a blog', function () {
-      cy.get('#toggle-details').click();
-      cy.get('#likes').contains(this.blogs[0].likes);
-      cy.get('#like-button').click();
-      cy.get('#likes').contains(this.blogs[0].likes + 1);
+      cy.get('#toggle-details-0').click();
+      cy.get('#likes-0').contains(this.blogs[0].likes);
+      cy.get('#like-button-0').click();
+      cy.get('#likes-0').contains(this.blogs[0].likes + 1);
+    });
+
+    it('a user can delete their own blog', function () {
+      cy.createBlog(this.blogs[1]);
+      cy.get('#toggle-details-1').click();
+      cy.get('#details-1').get('#delete-button-1').click();
+
+      cy.get('body').should('not.contain.text', this.blogs[1].title);
+      cy.get('body').should('not.contain.text', this.blogs[1].author);
+    });
+
+    it('a user cannot delete another users blog', function () {
+      cy.get('#toggle-details-0').click();
+      cy.get('#details-0')
+        .get('#delete-button-0')
+        .should('have.css', 'display', 'none');
     });
   });
 });

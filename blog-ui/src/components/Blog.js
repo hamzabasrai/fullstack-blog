@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, index }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
   const user = JSON.parse(window.localStorage.getItem('currentUser'));
 
@@ -46,11 +46,11 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
               margin: 0;
             }
           `}>
-          <h3 id="title">{blog.title}</h3>
-          <h4 id="author">by {blog.author}</h4>
+          <h3 id={`title-${index}`}>{blog.title}</h3>
+          <h4 id={`author-${index}`}>by {blog.author}</h4>
         </div>
         <button
-          id="toggle-details"
+          id={`toggle-details-${index}`}
           className={css`
             margin: 0 15px;
             flex: 0 1 auto;
@@ -60,7 +60,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         </button>
       </div>
       <div
-        id="details"
+        id={`details-${index}`}
         style={showDetails}
         className={css`
           display: flex;
@@ -83,14 +83,14 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             align-items: center;
           `}>
           <h5
-            id="likes"
+            id={`likes-${index}`}
             className={css`
               display: inline-block;
             `}>
             Likes - {blog.likes}
           </h5>
           <button
-            id="like-button"
+            id={`like-button-${index}`}
             className={css`
               margin: 0 10px;
               padding: 0.25em 1.2em;
@@ -110,6 +110,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         </div>
         <h5>Submitted by - {blog.user.name}</h5>
         <button
+          id={`delete-button-${index}`}
           style={showDelete}
           className={css`
             align-self: center;

@@ -15,4 +15,5 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
     body: { title, author, url, likes },
     headers: { Authorization: `Bearer ${user.token}` },
   });
+  cy.reload();
 });

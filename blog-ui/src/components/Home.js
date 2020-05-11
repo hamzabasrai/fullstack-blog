@@ -123,8 +123,9 @@ const Home = ({ name, handleLogout }) => {
             `}>
             {notification}
           </p>
-          {blogs.map((blog) => (
+          {blogs.map((blog, index) => (
             <Blog
+              index={index}
               key={blog.id}
               blog={blog}
               updateBlog={updateBlog}
