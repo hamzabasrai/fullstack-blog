@@ -1,5 +1,6 @@
 import loginService from '../services/loginService';
 import blogService from '../services/blogService';
+import { setNotification } from './notificationReducer';
 
 const initialState = null;
 
@@ -26,11 +27,9 @@ export const loginUser = (username, password) => {
         type: 'LOGIN',
         data: user,
       });
+      return Promise.resolve(user);
     } catch (error) {
-      dispatch({
-        type: 'LOGIN_FAILED',
-        data: 'Invalid credentials',
-      });
+      return Promise.reject(error);
     }
   };
 };

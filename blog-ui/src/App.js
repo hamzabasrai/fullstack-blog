@@ -5,16 +5,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import { getUser, loginUser, logoutUser } from './reducers/userReducer';
+import { setNotification } from './reducers/notificationReducer';
 
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => {
-    return state.user;
+  const [user, notification] = useSelector((state) => {
+    return [state.user, state.notification];
   });
 
   useEffect(() => {
@@ -26,9 +26,13 @@ function App() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    dispatch(loginUser(username, password));
-    setUsername('');
-    setPassword('');
+    try {
+      await dispatch(loginUser(username, password));
+      setUsername('');
+      setPassword('');
+    } catch (error) {
+      dispatch(setNotification('Invalid Credentials', 5));
+    }
   };
 
   const handleLogout = () => {
@@ -57,7 +61,7 @@ function App() {
           color: red;
           text-align: center;
         `}>
-        {errorMessage}
+        {notification}
       </p>
     </div>
   );
