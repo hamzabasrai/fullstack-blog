@@ -1,6 +1,5 @@
 import loginService from '../services/loginService';
 import blogService from '../services/blogService';
-import { setNotification } from './notificationReducer';
 
 const initialState = null;
 
