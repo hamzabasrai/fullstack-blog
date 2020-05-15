@@ -1,17 +1,28 @@
 import React from 'react';
 import { css } from 'emotion';
+import { useDispatch } from 'react-redux';
+
+import { loginUser } from '../reducers/userReducer';
+import { setNotification } from '../reducers/notificationReducer';
+import { useField } from '../hooks';
 
 const blockLabel = css`
   display: block;
 `;
 
-const LoginForm = ({
-  username,
-  password,
-  handleNameChange,
-  handlePasswordChange,
-  handleLogin,
-}) => {
+const LoginForm = () => {
+  const [username] = useField('text');
+  const [password] = useField('password');
+
+  const dispatch = useDispatch();
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    dispatch(loginUser(username.value, password.value)).catch(() => {
+      dispatch(setNotification('Invalid Credentials', 5));
+    });
+  };
+
   return (
     <div
       className={css`
@@ -23,23 +34,11 @@ const LoginForm = ({
       <form id="login-form" onSubmit={handleLogin}>
         <div>
           <label className={blockLabel}>Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={handleNameChange}
-          />
+          <input id="username" name="username" {...username} />
         </div>
         <div>
           <label className={blockLabel}>Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+          <input id="password" name="password" {...password} />
         </div>
         <button
           id="login-button"

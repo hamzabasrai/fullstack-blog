@@ -1,15 +1,24 @@
 import React, { useEffect, useState, createRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { css } from 'emotion';
+
 import blogService from '../services/blogService';
+import { logoutUser } from '../reducers/userReducer';
 import Blog from './Blog';
 import AddBlogForm from './AddBlogForm';
 import Togglable from './Togglable';
 
-const Home = ({ name, handleLogout }) => {
+const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState(null);
-
   const blogFormRef = createRef();
+
+  const dispatch = useDispatch();
+  const name = useSelector((state) => state.user.name);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
 
   const sortByLikes = (blog1, blog2) => blog2.likes - blog1.likes;
 
