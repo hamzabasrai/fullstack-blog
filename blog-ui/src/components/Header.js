@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.users.currentUser);
   const history = useHistory();
 
   const handleLogout = () => {

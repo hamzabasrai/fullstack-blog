@@ -6,7 +6,7 @@ import { setNotification } from '../reducers/notificationReducer';
 
 const Blog = ({ blog, index }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.users.currentUser);
 
   const [detailsVisible, setDetailsVisible] = useState(false);
   const buttonLabel = detailsVisible ? 'Hide' : 'View';

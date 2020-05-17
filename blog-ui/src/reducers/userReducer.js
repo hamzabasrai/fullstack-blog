@@ -1,15 +1,19 @@
 import loginService from '../services/loginService';
 import blogService from '../services/blogService';
+import userService from '../services/userService';
 
-const initialState = null;
+const initialState = { currentUser: null, allUsers: [] };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'INIT_USERS':
+      return { ...state, allUsers: action.data };
+
     case 'LOGIN':
-      return action.data;
+      return { ...state, currentUser: action.data };
 
     case 'LOGOUT':
-      return null;
+      return { ...state, currentUser: null };
 
     default:
       return state;
@@ -50,6 +54,18 @@ export const getUser = () => {
       const user = JSON.parse(currentUser);
       blogService.setToken(user.token);
       dispatch({ type: 'LOGIN', data: user });
+    }
+  };
+};
+
+export const initializeUsers = () => {
+  return async (dispatch) => {
+    try {
+      const users = await userService.getAll();
+      dispatch({ type: 'INIT_USERS', data: users });
+      return Promise.resolve(users);
+    } catch (error) {
+      return Promise.reject(error);
     }
   };
 };
