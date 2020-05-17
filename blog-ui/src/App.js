@@ -7,6 +7,7 @@ import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import { getUser } from './reducers/userReducer';
 import { initializeBlogs } from './reducers/blogReducer';
+import ProtectedRoute from './components/ProtectecdRoute';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function App() {
       `}>
       <Switch>
         <Route path="/login" component={LoginForm} />
-        <Route path="/" component={Home} />
+        <ProtectedRoute path="/" component={Home} />
       </Switch>
     </div>
   );
