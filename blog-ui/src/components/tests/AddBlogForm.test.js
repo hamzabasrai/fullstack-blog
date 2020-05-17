@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
-import AddBlogForm from './AddBlogForm';
+import AddBlogForm from '../AddBlogForm';
 
 test('event handler is called when correct data form is submitted', () => {
   const createBlog = jest.fn();
