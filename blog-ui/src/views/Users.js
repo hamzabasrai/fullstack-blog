@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { css } from 'emotion';
 
 import Layout from '../components/Layout';
-import { useSelector } from 'react-redux';
 
 const Users = () => {
   const users = useSelector((state) => state.users.allUsers);
@@ -37,7 +38,9 @@ const Users = () => {
             {users.map((user) => {
               return (
                 <tr key={user.id}>
-                  <td>{user.name}</td>
+                  <td>
+                    <Link to={`/users/${user.id}`}>{user.name}</Link>
+                  </td>
                   <td>{user.blogs.length}</td>
                   <td>
                     {user.blogs.reduce((sum, blog) => (sum += blog.likes), 0)}

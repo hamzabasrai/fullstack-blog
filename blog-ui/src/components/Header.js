@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { css } from 'emotion';
 
 import { logoutUser } from '../reducers/userReducer';
-import { useHistory } from 'react-router-dom';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -21,32 +21,28 @@ const Header = () => {
         className={css`
           display: flex;
           flex-direction: row;
-          align-items: baseline;
+          align-items: center;
         `}>
-        <div
+        <h1
           className={css`
+            margin: 0;
             flex: 1 0 auto;
           `}>
-          <h1
-            className={css`
-              margin: 0;
-            `}>
-            Blogs
-          </h1>
-          <h5
-            className={css`
-              margin: 0;
-            `}>
-            {user.name} is logged in
-          </h5>
-        </div>
-        <button
+          Blog App
+        </h1>
+        <div
           className={css`
             flex: 0 1 auto;
-          `}
-          onClick={handleLogout}>
-          Logout
-        </button>
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            h5 {
+              margin: 0;
+            }
+          `}>
+          <h5>Signed in as {user.name}</h5>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
     </>
   );
