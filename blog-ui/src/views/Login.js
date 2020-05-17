@@ -32,7 +32,7 @@ const Login = () => {
       });
   };
 
-  return user === null ? (
+  return !user ? (
     <div
       className={css`
         display: flex;

@@ -22,14 +22,17 @@ const Header = () => {
           display: flex;
           flex-direction: row;
           align-items: center;
+          border: 1px solid black;
+          border-radius: 10px;
+          padding: 10px;
         `}>
-        <h1
+        <h3
           className={css`
             margin: 0;
             flex: 1 0 auto;
           `}>
           Blog App
-        </h1>
+        </h3>
         <div
           className={css`
             flex: 0 1 auto;

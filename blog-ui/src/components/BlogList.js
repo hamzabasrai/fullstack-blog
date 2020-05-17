@@ -1,8 +1,33 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { css } from 'emotion';
+import { Link } from 'react-router-dom';
 
-import Blog from './Blog';
+const BlogListItem = ({ blog, index }) => {
+  return (
+    <div
+      id={`blog-${index}`}
+      className={css`
+        margin: 10px 0;
+        padding: 0.25em;
+        border: thick groove goldenrod;
+      `}>
+      <Link
+        className={css`
+          text-decoration: none;
+          h3,
+          h4 {
+            display: inline-block;
+            margin: 0;
+          }
+        `}
+        to={`/blogs/${blog.id}`}>
+        <h3 id={`title-${index}`}>{blog.title}</h3>{' '}
+        <h4 id={`author-${index}`}>- {blog.author}</h4>
+      </Link>
+    </div>
+  );
+};
 
 const BlogList = () => {
   const [blogs, notification] = useSelector((state) => {
@@ -21,7 +46,7 @@ const BlogList = () => {
         {notification}
       </p>
       {blogs.map((blog, index) => (
-        <Blog index={index} key={blog.id} blog={blog} />
+        <BlogListItem index={index} key={blog.id} blog={blog} />
       ))}
     </div>
   );
