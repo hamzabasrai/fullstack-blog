@@ -25,12 +25,12 @@ const blogReducer = (state = initialState, action) => {
   }
 };
 
-export const initializeBlogs = (blogs) => {
+export const initializeBlogs = () => {
   return async (dispatch) => {
     try {
       const blogs = await blogService.getAll();
       dispatch({ type: 'INIT_BLOGS', data: blogs });
-      return Promise.reselove(blogs);
+      return Promise.resolve(blogs);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -41,7 +41,7 @@ export const createBlog = (blog) => {
   return async (dispatch) => {
     try {
       const newBlog = await blogService.create(blog);
-      dispatch({ type: 'CREATE_BLOG', data: blog });
+      dispatch({ type: 'CREATE_BLOG', data: newBlog });
       return Promise.resolve(newBlog);
     } catch (error) {
       return Promise.reject(error);
@@ -61,14 +61,14 @@ export const updateBlog = (blog) => {
   };
 };
 
-export const deleteBlog = (id) => {
+export const removeBlog = (blog) => {
   return async (dispatch) => {
     try {
-      await blogService.remove(id);
-      dispatch({ type: 'DELETE_BLOG', data: id });
-      Promise.resolve();
+      await blogService.remove(blog.id);
+      dispatch({ type: 'DELETE_BLOG', data: blog.id });
+      return Promise.resolve();
     } catch (error) {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   };
 };

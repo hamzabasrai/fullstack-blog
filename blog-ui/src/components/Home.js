@@ -1,87 +1,19 @@
-import React, { useEffect, useState, createRef } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { css } from 'emotion';
 
-import blogService from '../services/blogService';
 import { logoutUser } from '../reducers/userReducer';
-import Blog from './Blog';
 import AddBlogForm from './AddBlogForm';
 import Togglable from './Togglable';
+import BlogList from './BlogList';
 
 const Home = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
-  const blogFormRef = createRef();
-
   const dispatch = useDispatch();
   const name = useSelector((state) => state.user.name);
 
   const handleLogout = () => {
     dispatch(logoutUser());
   };
-
-  const sortByLikes = (blog1, blog2) => blog2.likes - blog1.likes;
-
-  const createBlog = async (blog) => {
-    try {
-      blogFormRef.current.toggleVisibility();
-      const newBlog = await blogService.create(blog);
-      const newBlogs = blogs.concat(newBlog);
-      setBlogs(newBlogs);
-      setNotification(`Added '${newBlog.title}' by ${newBlog.author}`);
-      setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      console.log(error);
-      setNotification('Failed to add new blog');
-      setTimeout(() => setNotification(null), 3000);
-    }
-  };
-
-  const updateBlog = async (blog) => {
-    try {
-      const updatedBlog = await blogService.update(blog);
-      const newBlogs = blogs.map((blog) =>
-        blog.id === updatedBlog.id ? updatedBlog : blog
-      );
-      newBlogs.sort(sortByLikes);
-      setBlogs(newBlogs);
-    } catch (error) {
-      console.log(error);
-      setNotification('Failed to update blog');
-      setTimeout(() => setNotification(null), 3000);
-    }
-  };
-
-  const removeBlog = async (blogToDelete) => {
-    try {
-      await blogService.remove(blogToDelete.id);
-      const newBlogs = blogs
-        .filter((blog) => blog.id !== blogToDelete.id)
-        .sort(sortByLikes);
-      setBlogs(newBlogs);
-      setNotification(
-        `Deleted ${blogToDelete.title} by ${blogToDelete.author}`
-      );
-      setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      console.log(error);
-      setNotification('Failed to delete blog');
-      setTimeout(() => setNotification(null), 3000);
-    }
-  };
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const blogData = await blogService.getAll();
-        blogData.sort(sortByLikes);
-        setBlogs(blogData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchBlogs();
-  }, []);
 
   return (
     <>
@@ -122,26 +54,10 @@ const Home = () => {
           flex-direction: column;
           margin: 5px 0;
         `}>
-        <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
-          <AddBlogForm createBlog={createBlog} />
+        <Togglable buttonLabel="Add Blog">
+          <AddBlogForm />
         </Togglable>
-        <div>
-          <p
-            className={css`
-              text-align: center;
-            `}>
-            {notification}
-          </p>
-          {blogs.map((blog, index) => (
-            <Blog
-              index={index}
-              key={blog.id}
-              blog={blog}
-              updateBlog={updateBlog}
-              removeBlog={removeBlog}
-            />
-          ))}
-        </div>
+        <BlogList />
       </div>
     </>
   );

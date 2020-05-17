@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import { getUser } from './reducers/userReducer';
+import { initializeBlogs } from './reducers/blogReducer';
 
 function App() {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getUser());
+    dispatch(initializeBlogs());
   }, [dispatch]);
 
   return (

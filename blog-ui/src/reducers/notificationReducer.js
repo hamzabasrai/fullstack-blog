@@ -17,7 +17,7 @@ const notificationReducer = (state = initialState, action) => {
 // notification when there are multiple setNotification calls in quick succession.
 let timeoutID;
 
-export const setNotification = (message, duration) => {
+export const setNotification = (message, duration = 3) => {
   return (dispatch) => {
     dispatch({
       type: 'SET_NOTIFICATION',

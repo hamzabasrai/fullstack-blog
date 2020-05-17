@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateBlog, removeBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, updateBlog, removeBlog, index }) => {
+const Blog = ({ blog, index }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
   const [detailsVisible, setDetailsVisible] = useState(false);
-  const user = JSON.parse(window.localStorage.getItem('currentUser'));
-
   const buttonLabel = detailsVisible ? 'Hide' : 'View';
   const showDetails = { display: detailsVisible ? '' : 'none' };
 
   const toggleDetails = () => setDetailsVisible(!detailsVisible);
 
   const incrementLikes = () => {
-    updateBlog({ ...blog, likes: blog.likes + 1 });
+    dispatch(updateBlog({ ...blog, likes: blog.likes + 1 })).catch(() => {
+      dispatch(setNotification(`Error - Unable to like '${blog.title}'`));
+    });
   };
 
   const showDelete = {
@@ -20,7 +26,11 @@ const Blog = ({ blog, updateBlog, removeBlog, index }) => {
 
   const deleteBlog = () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      removeBlog(blog);
+      dispatch(removeBlog(blog))
+        .then(() => dispatch(setNotification(`Deleted '${blog.title}'`)))
+        .catch(() => {
+          dispatch(setNotification(`Error - Unable to delete '${blog.title}'`));
+        });
     }
   };
 

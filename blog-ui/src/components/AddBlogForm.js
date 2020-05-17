@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { css } from 'emotion';
+import { useField } from '../hooks';
+import { useDispatch } from 'react-redux';
+import { setNotification } from '../reducers/notificationReducer';
+import { createBlog } from '../reducers/blogReducer';
 
 const blockLabel = css`
   display: block;
@@ -11,34 +15,26 @@ const inlineBlock = css`
   margin: 0 10px;
 `;
 
-const AddBlogForm = ({ createBlog }) => {
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogAuthor, setBlogAuthor] = useState('');
-  const [blogUrl, setBlogUrl] = useState('');
+const AddBlogForm = () => {
+  const dispatch = useDispatch();
 
-  const handleChange = (event) => {
-    switch (event.target.name) {
-      case 'title':
-        setBlogTitle(event.target.value);
-        break;
-      case 'author':
-        setBlogAuthor(event.target.value);
-        break;
-      case 'url':
-        setBlogUrl(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
+  const [title, setTitle] = useField('text');
+  const [author, setAuthor] = useField('text');
+  const [url, setURL] = useField('url');
 
   const addBlog = (event) => {
     event.preventDefault();
-    const blog = { title: blogTitle, author: blogAuthor, url: blogUrl };
-    createBlog(blog);
-    setBlogTitle('');
-    setBlogAuthor('');
-    setBlogUrl('');
+    const blog = { title: title.value, author: author.value, url: url.value };
+    dispatch(createBlog(blog))
+      .then(() => {
+        dispatch(setNotification(`Added '${blog.title}' by ${blog.author}`));
+        setTitle('');
+        setAuthor('');
+        setURL('');
+      })
+      .catch(() => {
+        dispatch(setNotification('Error - Unable to create blog'));
+      });
   };
 
   return (
@@ -60,37 +56,19 @@ const AddBlogForm = ({ createBlog }) => {
             <label className={blockLabel} htmlFor="title">
               Title
             </label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              value={blogTitle}
-              onChange={handleChange}
-            />
+            <input name="title" id="title" {...title} />
           </div>
           <div className={inlineBlock}>
             <label className={blockLabel} htmlFor="author">
               Author
             </label>
-            <input
-              type="text"
-              name="author"
-              id="author"
-              value={blogAuthor}
-              onChange={handleChange}
-            />
+            <input name="author" id="author" {...author} />
           </div>
           <div className={inlineBlock}>
             <label className={blockLabel} htmlFor="url">
               URL
             </label>
-            <input
-              type="text"
-              name="url"
-              id="url"
-              value={blogUrl}
-              onChange={handleChange}
-            />
+            <input name="url" id="url" {...url} />
           </div>
           <button id="add-blog-submit" type="submit" className={inlineBlock}>
             Add Blog
