@@ -1,30 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { css } from 'emotion';
-import { useDispatch } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Home from './components/Home';
-import LoginForm from './components/LoginForm';
-import { getUser } from './reducers/userReducer';
-import { initializeBlogs } from './reducers/blogReducer';
-import ProtectedRoute from './components/ProtectecdRoute';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './views/Login';
+import Blogs from './views/Blogs';
+import Users from './views/Users';
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUser());
-    dispatch(initializeBlogs());
-  }, [dispatch]);
-
   return (
     <div
       className={css`
         padding: 3% 5%;
       `}>
       <Switch>
-        <Route path="/login" component={LoginForm} />
-        <ProtectedRoute path="/" component={Home} />
+        <ProtectedRoute path="/users" component={Users} />
+        <ProtectedRoute path="/blogs" component={Blogs} />
+        <Route path="/login" component={Login} />
+        <Route path="*" render={() => <Redirect to="/blogs" />} />
       </Switch>
     </div>
   );

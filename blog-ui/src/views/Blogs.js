@@ -1,12 +1,12 @@
 import React from 'react';
 import { css } from 'emotion';
 
-import AddBlogForm from './AddBlogForm';
-import Togglable from './Togglable';
-import BlogList from './BlogList';
-import Layout from './Layout';
+import AddBlogForm from '../components/AddBlogForm';
+import Togglable from '../components/Togglable';
+import BlogList from '../components/BlogList';
+import Layout from '../components/Layout';
 
-const Home = () => {
+const Blogs = () => {
   return (
     <Layout>
       <div
@@ -24,4 +24,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Blogs;

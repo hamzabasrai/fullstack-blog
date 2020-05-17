@@ -5,16 +5,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../reducers/userReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import { useField } from '../hooks';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 
 const blockLabel = css`
   display: block;
 `;
 
-const LoginForm = () => {
+const Login = () => {
   const dispatch = useDispatch();
-  const notification = useSelector((state) => {
-    return state.notification;
+  const [user, notification] = useSelector((state) => {
+    return [state.user, state.notification];
   });
   const history = useHistory();
 
@@ -25,14 +25,14 @@ const LoginForm = () => {
     event.preventDefault();
     dispatch(loginUser(username.value, password.value))
       .then(() => {
-        history.push('/');
+        history.push('/blogs');
       })
       .catch(() => {
         dispatch(setNotification('Invalid Credentials', 5));
       });
   };
 
-  return (
+  return user === null ? (
     <div
       className={css`
         display: flex;
@@ -68,7 +68,9 @@ const LoginForm = () => {
         {notification}
       </p>
     </div>
+  ) : (
+    <Redirect to="/" />
   );
 };
 
-export default LoginForm;
+export default Login;
