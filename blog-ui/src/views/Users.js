@@ -14,7 +14,6 @@ const Users = () => {
         className={css`
           display: flex;
           flex-direction: column;
-          margin: 5px 0;
         `}>
         <h1>Users</h1>
         <table
