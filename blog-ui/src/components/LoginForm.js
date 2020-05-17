@@ -1,26 +1,35 @@
 import React from 'react';
 import { css } from 'emotion';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { loginUser } from '../reducers/userReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import { useField } from '../hooks';
+import { useHistory } from 'react-router-dom';
 
 const blockLabel = css`
   display: block;
 `;
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => {
+    return state.notification;
+  });
+  const history = useHistory();
+
   const [username] = useField('text');
   const [password] = useField('password');
 
-  const dispatch = useDispatch();
-
   const handleLogin = async (event) => {
     event.preventDefault();
-    dispatch(loginUser(username.value, password.value)).catch(() => {
-      dispatch(setNotification('Invalid Credentials', 5));
-    });
+    dispatch(loginUser(username.value, password.value))
+      .then(() => {
+        history.push('/');
+      })
+      .catch(() => {
+        dispatch(setNotification('Invalid Credentials', 5));
+      });
   };
 
   return (
@@ -50,6 +59,14 @@ const LoginForm = () => {
           Login
         </button>
       </form>
+      <p
+        id="error-msg"
+        className={css`
+          color: red;
+          text-align: center;
+        `}>
+        {notification}
+      </p>
     </div>
   );
 };

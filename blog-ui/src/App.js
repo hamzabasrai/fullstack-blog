@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { css } from 'emotion';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
 
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
@@ -9,10 +10,6 @@ import { initializeBlogs } from './reducers/blogReducer';
 
 function App() {
   const dispatch = useDispatch();
-
-  const [user, notification] = useSelector((state) => {
-    return [state.user, state.notification];
-  });
 
   useEffect(() => {
     dispatch(getUser());
@@ -24,15 +21,10 @@ function App() {
       className={css`
         padding: 3% 5%;
       `}>
-      {user === null ? <LoginForm /> : <Home />}
-      <p
-        id="error-msg"
-        className={css`
-          color: red;
-          text-align: center;
-        `}>
-        {notification}
-      </p>
+      <Switch>
+        <Route path="/login" component={LoginForm} />
+        <Route path="/" component={Home} />
+      </Switch>
     </div>
   );
 }

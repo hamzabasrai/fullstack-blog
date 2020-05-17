@@ -20,8 +20,10 @@ const Blog = ({ blog, index }) => {
     });
   };
 
-  const showDelete = {
-    display: user.username === blog.user.username ? '' : 'none',
+  const showDelete = () => {
+    if (user) {
+      return { display: user.username === blog.user.username ? '' : 'none' };
+    }
   };
 
   const deleteBlog = () => {
@@ -122,7 +124,7 @@ const Blog = ({ blog, index }) => {
         <h5>Submitted by - {blog.user.name}</h5>
         <button
           id={`delete-button-${index}`}
-          style={showDelete}
+          style={showDelete()}
           className={css`
             align-self: center;
             padding: 0.35em 1.2em;
