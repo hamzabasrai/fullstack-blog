@@ -1,14 +1,25 @@
 import React from 'react';
-import { css } from 'emotion';
+import { css, cx } from 'emotion';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { updateBlog, removeBlog } from '../reducers/blogReducer';
+import { updateBlog, removeBlog, addComment } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
+import { useField } from '../hooks';
 import Layout from '../components/Layout';
+
+const inlineBlock = css`
+  display: inline-block;
+  margin-inline-end: 10px;
+`;
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.currentUser);
+  const [user, notification] = useSelector((state) => [
+    state.users.currentUser,
+    state.notification,
+  ]);
+
+  const [comment, setComment] = useField('text');
 
   const incrementLikes = () => {
     dispatch(updateBlog({ ...blog, likes: blog.likes + 1 })).catch(() => {
@@ -25,17 +36,32 @@ const Blog = ({ blog }) => {
   const deleteBlog = () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
       dispatch(removeBlog(blog))
-        .then(() => dispatch(setNotification(`Deleted '${blog.title}'`)))
+        .then(() => {
+          dispatch(setNotification(`Deleted '${blog.title}'`));
+        })
         .catch(() => {
           dispatch(setNotification(`Error - Unable to delete '${blog.title}'`));
         });
     }
   };
 
+  const postComment = (event) => {
+    event.preventDefault();
+    dispatch(addComment(blog, comment.value))
+      .then(() => {
+        setComment('');
+      })
+      .catch(() => {
+        dispatch(setNotification('Error - Unable to post comment'));
+      });
+  };
+
   return !blog ? null : (
     <Layout>
       <div
         className={css`
+          display: flex;
+          flex-direction: column;
           h1,
           h3 {
             margin: 0;
@@ -112,13 +138,38 @@ const Blog = ({ blog }) => {
           `}>
           Comments
         </h2>
-        <ul>
-          {blog.comments.map((comment) => (
-            <li key={Math.floor(Math.random() * blog.comments.length)}>
-              {comment}
-            </li>
+        <ul
+          className={css`
+            margin-block-end: 15px;
+          `}>
+          {blog.comments.map((comment, index) => (
+            <li key={index}>{comment}</li>
           ))}
         </ul>
+        <h4>Post Comment</h4>
+        <form onSubmit={postComment}>
+          <input
+            className={cx(
+              inlineBlock,
+              css`
+                min-width: 50vw;
+              `
+            )}
+            name="comment"
+            id="comment"
+            {...comment}
+          />
+          <button id="post-comment" type="submit" className={inlineBlock}>
+            Post
+          </button>
+        </form>
+        <p
+          className={css`
+            align-self: center;
+            color: red;
+          `}>
+          {notification}
+        </p>
       </div>
     </Layout>
   );
