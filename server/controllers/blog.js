@@ -48,6 +48,7 @@ blogRouter.put('/:id', async (req, res) => {
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
+    comments: req.body.comments,
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
@@ -55,6 +56,22 @@ blogRouter.put('/:id', async (req, res) => {
   }).populate('user', { username: 1, name: 1 });
 
   res.json(updatedBlog);
+});
+
+blogRouter.post('/:id/comments', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'Missing or invalid token' });
+  }
+
+  const blogToUpdate = await Blog.findById(req.params.id);
+  blogToUpdate.comments = blogToUpdate.comments.concat(req.body.comment);
+  const updatedBlog = await blogToUpdate.save();
+
+  const populatedBlog = await updatedBlog
+    .populate('user', { username: 1, name: 1 })
+    .execPopulate();
+  res.status(201).json(populatedBlog);
 });
 
 module.exports = blogRouter;
