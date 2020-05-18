@@ -106,6 +106,19 @@ const Blog = ({ blog }) => {
             Delete Blog
           </button>
         </div>
+        <h2
+          className={css`
+            margin-top: 10px;
+          `}>
+          Comments
+        </h2>
+        <ul>
+          {blog.comments.map((comment) => (
+            <li key={Math.floor(Math.random() * blog.comments.length)}>
+              {comment}
+            </li>
+          ))}
+        </ul>
       </div>
     </Layout>
   );
