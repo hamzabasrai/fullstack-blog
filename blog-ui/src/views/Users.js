@@ -15,7 +15,7 @@ const Users = () => {
           display: flex;
           flex-direction: column;
         `}>
-        <h1>Users</h1>
+        <h1 style={{ marginBottom: '10px' }}>Users</h1>
         <table
           className={css`
             border-collapse: collapse;

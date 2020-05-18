@@ -9,9 +9,6 @@ const linkStyle = css`
   display: inline-block;
   margin: 0 10px;
   text-decoration: none;
-  h3 {
-    margin: 0;
-  }
   &:visited {
     color: black;
   }
@@ -70,9 +67,6 @@ const Header = () => {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            h5 {
-              margin: 0;
-            }
           `}>
           <h5>Signed in as {user.name}</h5>
           <button onClick={handleLogout}>Logout</button>

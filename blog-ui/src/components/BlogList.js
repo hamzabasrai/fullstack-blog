@@ -9,21 +9,23 @@ const BlogListItem = ({ blog, index }) => {
       id={`blog-${index}`}
       className={css`
         margin: 10px 0;
-        padding: 0.25em;
-        border: thick groove goldenrod;
+        padding: 0.25em 0;
+        font-size: 1.25em;
       `}>
-      <Link
-        className={css`
-          text-decoration: none;
-          h3,
-          h4 {
-            display: inline-block;
-            margin: 0;
-          }
-        `}
-        to={`/blogs/${blog.id}`}>
-        <h3 id={`title-${index}`}>{blog.title}</h3>{' '}
-        <h4 id={`author-${index}`}>- {blog.author}</h4>
+      <Link to={`/blogs/${blog.id}`}>
+        <span
+          className={css`
+            font-weight: bold;
+          `}>
+          {blog.title}
+        </span>{' '}
+        -{' '}
+        <span
+          className={css`
+            font-style: italic;
+          `}>
+          {blog.author}
+        </span>
       </Link>
     </div>
   );

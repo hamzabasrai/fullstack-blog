@@ -18,6 +18,15 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  margin-top: 0;
+h6,
+ul {
+  margin: 0;
+}
+
+a:hover {
+  text-decoration: underline solid goldenrod;
+}
+
+a:visited {
+  color: black;
 }
