@@ -29,6 +29,7 @@ const update = async (blog) => {
     title: blog.title,
     url: blog.url,
     likes: blog.likes,
+    comments: blog.comments,
   };
   const response = await axios.put(
     `${baseUrl}/${updatedBlog.id}`,
